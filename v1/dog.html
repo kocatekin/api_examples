@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+<head>
+</head>
+<body>
+
+<input type="text" placeholder="write the url of the api" id="mylink"><br>
+<button onclick="run()">CLICK ME</button>
+
+<div id="output">
+<img src="" id="myimg">
+</diV>
+
+</body>
+<script>
+
+//https://dog.ceo/api/breeds/image/random
+
+async function run() {
+
+
+	let link = document.getElementById("mylink").value;
+	let result = await fetchURL(link);
+	console.log(result);
+	console.log(result["message"]);
+	let myimg = document.getElementById("myimg");
+	myimg.src = result["message"];
+}
+
+
+async function fetchURL(myurl) {
+
+	const response = await fetch(myurl);
+	const res = await response.json();
+	return res;
+}
+
+
+
+
+</script>
+</html>
