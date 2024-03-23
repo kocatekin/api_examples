@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3pro.css">
+</head>
+    <body>
+
+        <div id="mydiv">
+            <div id="altin"></div>
+            <div id="gumus"></div>
+        </div>
+                   
+    </body>
+    <script>
+   
+        const apiURL = "http://localhost:5000/";
+        
+
+        async function fetchPost() {
+            try{ 
+                let res = await fetch(apiURL);
+                let data = await res.json();
+                
+                console.log(data);
+                show(data);
+
+            } catch(error) {
+                console.error(`error fetching: ${error}`);
+            }
+        }
+
+        function show(data) {
+            let tarih = data["date"];
+            let goldBuy = data["gold"]["buy"];
+            let goldSell = data["gold"]["sell"];
+            let silverBuy = data["silver"]["buy"];
+            let silverSell = data["silver"]["sell"];
+
+            document.getElementById("altin").innerHTML = `Altın: <br> Alış: ${goldBuy} Satış: ${goldSell}`;
+            document.getElementById("gumus").innerHTML = `Gümüş: <br> Alış: ${silverBuy} Satış: ${silverSell}`;
+
+
+        }
+        
+        
+        fetchPost();
+        setInterval(fetchPost, 5000);
+
+        //how to see if they increase or decrease? 
+        //i need to save the data, and compare it with the incoming data
+        //data can be stored in a basic array. later, array elements will be compared and we will see if it is larger or not
+        //if larger, green -- if not, red.
+
+            
+            
+
+    </script>
+</html>
