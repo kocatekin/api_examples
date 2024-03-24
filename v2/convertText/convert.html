@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+<head>
+<title>Converter</title>
+</head>
+<body>
+
+	<form id="myform" name="myform" method="post" action="http://localhost:5000/convert">
+	<input type="text" name="mytext" id="mytext">
+	<br>
+	<input type="submit">
+	</form>
+
+<hr>
+<div id="output"></div>
+
+</body>
+
+<script>
+
+	let myform = document.getElementById("myform");
+	let output = document.getElementById("output");
+	
+	//lets listen to form
+
+	myform.addEventListener("submit", function(event) { 
+
+	event.preventDefault();
+	let url = "http://localhost:5000/convert";
+	let data = document.getElementById("mytext").value;
+	
+	const options = {
+	
+		method: "POST",
+		headers: {
+			'Content-Type': 'application/json'},
+		body: JSON.stringify({"text": data})
+};
+
+	fetch(url, options)
+	.then(response => { return response.json() } )
+	.then(data => { show(data) })
+	.catch(err => { console.log("err:", err)} );
+});	
+
+
+	function show(data) {
+		console.log(data);
+		let output = document.getElementById("output");
+		output.innerHTML = data.camelcase;
+	}
+
+
+
+
+</script>
+
+
+</html>

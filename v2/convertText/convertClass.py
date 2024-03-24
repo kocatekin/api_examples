@@ -24,7 +24,7 @@ class Text:
 
 	def cobolcase(self):
 		return '-'.join([x.upper() for x in self.text.split(" ")])
-
+"""
 t = Text("tugberk kocatekin")
 # print test
 print(t.camelcase())
@@ -33,4 +33,4 @@ print(t.traincase())
 print(t.cobolcase())
 print(t.pascalcase())
 print(t.kebabcase())
-
+"""
