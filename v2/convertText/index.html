@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+<head>
+</head>
+<body>
+
+<form id="myform" method="post" action="http://localhost:5000/convert">
+<br>
+<input type="text" name="input" id="input">
+<br>
+<input type="submit">
+</form>
+<hr>
+<div id="output"></div>
+</body>
+<script>
+
+const form = document.getElementById("myform");
+const output = document.getElementById("output");
+
+form.addEventListener("submit", function(event) {
+	event.preventDefault();
+	const url = "http://localhost:5000/convert";
+	const data = document.getElementById("input").value;
+	
+	const options = {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'},
+		body: JSON.stringify({"text": data})
+};
+
+	fetch(url, options)
+	.then(response => { return response.json(); })
+	.then(data => { show(data); })
+	.catch(err => { console.log("error", error); });
+});
+
+function show(data) {
+
+	alert(data["text"]);
+
+}
+
+
+
+</script>
+</html>
