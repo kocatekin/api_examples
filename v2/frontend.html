@@ -8,14 +8,21 @@
     <body>
 
         <div id="mydiv">
-            <div id="altin"></div>
-            <div id="gumus"></div>
+            <div id="altin">
+                Altın: <br> Alış: <span id="gold-buy"></span>, Satış: <span id="gold-sell"></span>
+            </div>
+            <div id="gumus">
+                Gümüş: <br> Alış: <span id="silver-buy"></span>, Satış: <span id="silver-sell"></span>
+            </div>
         </div>
                    
     </body>
     <script>
    
         const apiURL = "http://localhost:5000/";
+
+        //array so we can keep tack of the rates
+        const trackRates = []
         
 
         async function fetchPost() {
@@ -33,15 +40,45 @@
 
         function show(data) {
             let tarih = data["date"];
-            let goldBuy = data["gold"]["buy"];
-            let goldSell = data["gold"]["sell"];
-            let silverBuy = data["silver"]["buy"];
-            let silverSell = data["silver"]["sell"];
+            let goldBuy = data["gold"]["buy"].replace('.', '').replace(',', '.'); // we are changing the format to ordinary for example from 2.389,72 to 2389.72
+            let goldSell = data["gold"]["sell"].replace('.', '').replace(',', '.');
+            let silverBuy = data["silver"]["buy"].replace(',', '.'); // we are changing the format to ordinary for example from 25,9032 to 25.9032
+            let silverSell = data["silver"]["sell"].replace(',', '.');
 
-            document.getElementById("altin").innerHTML = `Altın: <br> Alış: ${goldBuy} Satış: ${goldSell}`;
-            document.getElementById("gumus").innerHTML = `Gümüş: <br> Alış: ${silverBuy} Satış: ${silverSell}`;
+            //we only want to store only the latest values of if the values exist we update else we push them into the array
+            if (trackRates.length < 4) {
+                trackRates.push({ goldBuy, icon: '-' }, { goldSell, icon: '-' }, { silverBuy, icon: '-' }, { silverSell, icon: '-' });
+            } else {
+                updateRate(0, trackRates[0].goldBuy, goldBuy, "gold-buy", "goldBuy");
+                updateRate(1, trackRates[1].goldSell, goldSell, "gold-sell", "golSell");
+                updateRate(2, trackRates[2].silverBuy, silverBuy, "silver-buy", "silverBuy");
+                updateRate(3, trackRates[3].silverSell, silverSell, "silver-sell", "silverSell");
+            }
+            console.log(trackRates)
+
+            document.getElementById("gold-buy").innerHTML = `${goldBuy} ${trackRates[0].icon}`;
+            document.getElementById("gold-sell").innerHTML = `${goldSell} ${trackRates[1].icon}`;
+            document.getElementById("silver-buy").innerHTML = `${silverBuy} ${trackRates[2].icon}`;
+            document.getElementById("silver-sell").innerHTML = `${silverSell} ${trackRates[3].icon}`;
+            //document.getElementById("altin").innerHTML = `Altın: <br> Alış: ${goldBuy} ${trackRates[0].icon}, Satış: ${goldSell}`;
+            //document.getElementById("gumus").innerHTML = `Gümüş: <br> Alış: ${silverBuy} Satış: ${silverSell}`;
 
 
+        }
+
+        //this function takes 4 arguments
+        //rateIndex to access the index of the rate
+        //currentValue is the latest value of that particular index
+        //newValue is the vlaue we got from the api
+        //elemetId is the id of the html tag so we can update the UI
+        //target we use that to update the value we want whether its the name of the rate or the icon 
+        function updateRate(rateIndex, currentValue, newValue, elementId, target) {
+            const icon = parseFloat(currentValue) <= parseFloat(newValue) ? "▲" : "▼"; 
+            const color = parseFloat(currentValue) <= parseFloat(newValue) ? "green" : "red";
+        
+            trackRates[rateIndex][target] = newValue
+            trackRates[rateIndex]["icon"] = icon
+            document.getElementById(elementId).style.color = color;
         }
         
         
