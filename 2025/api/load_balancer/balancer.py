@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, jsonify
 import requests as req
 
 app = Flask(__name__)
@@ -16,7 +16,7 @@ def get_next_server():
 @app.route('/')
 def index():
   res = req.get(SERVERS[get_next_server()])
-  return res.text
+  return res.json()
 
 
 if __name__ == "__main__":
